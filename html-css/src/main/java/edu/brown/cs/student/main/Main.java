@@ -7,6 +7,7 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import spark.ExceptionHandler;
 import spark.ModelAndView;
+import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -125,13 +126,31 @@ public final class Main {
     Spark.exception(Exception.class, new ExceptionPrinter());
     FreeMarkerEngine freeMarker = createEngine();
     Spark.get("/autocorrect", new AutocorrectHandler(), freeMarker);
+    Spark.post("/results", new SubmitHandler(), freeMarker);
+  }
+
+  private static class SubmitHandler implements TemplateViewRoute {
+
+    @Override
+    public ModelAndView handle(Request request, Response response) throws Exception {
+      QueryParamsMap qm = request.queryMap();
+      String textFromTextField = qm.value("text");
+      Set<String> suggestions = ac.suggest(textFromTextField);
+      StringBuilder output = new StringBuilder();
+      for (String s : suggestions) {
+        output.append(s).append(", ");
+      }
+      Map<String, String> variables = ImmutableMap.of("title", "This is the title!", "message", "This is the message!", "suggestions",
+          output.toString());
+      return new ModelAndView(variables, "autocorrect.ftl");
+    }
   }
 
   private static class AutocorrectHandler implements TemplateViewRoute {
 
     @Override
     public ModelAndView handle(Request request, Response response) throws Exception {
-      Map<String, String> variables = ImmutableMap.of("title", "This is the title!", "message", "This is the message!");
+      Map<String, String> variables = ImmutableMap.of("title", "This is the title!", "message", "This is the message!", "suggestions", "");
       return new ModelAndView(variables, "autocorrect.ftl");
     }
   }

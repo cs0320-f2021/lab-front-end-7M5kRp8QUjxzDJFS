@@ -1,3 +1,10 @@
 input[type="number"] {
   width: 3em;
 }
+.body {
+  background-color: #5689c6;
+  text-align: center;
+}
+#anID {
+  font-size: 5em;
+}

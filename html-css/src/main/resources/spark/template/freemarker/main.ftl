@@ -10,9 +10,9 @@
     <link rel="stylesheet" href="css/html5bp.css">
     <link rel="stylesheet" href="css/main.css">
   </head>
-  <body>
+  <body id="1" class="body">
        <!-- Again, we're serving up the unminified source for clarity. -->
-       <h1>AUTOCORRECT</h1>
+       <h1 id="anID" class="header">AUTOCORRECT</h1>
        ${content}
      <script src="js/jquery-2.1.1.js"></script>
      <script src="js/main.js"></script>
